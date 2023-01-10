@@ -49,22 +49,27 @@ const pr = [
 const cart = [];
 
 const add = (product) => {
-  const index = cart.findIndex((item) => item.id === product.id);
+  const index = cart.findIndex((item) => item.id === product.id); // find if we already have item in our cart
+  
+  
   if (index === -1) {
+    // if we dont had the item
     const toAdd = {
       ...product,
       q: 1,
       totalPrice: product.price,
-    };
-    cart.push(toAdd);
+    };  // create a new object with two extra properties  q , total
+    cart.push(toAdd);  // then push it to our cart
   } else {
-    cart[index].q = cart[index].q + 1;
-    cart[index].totalPrice = cart[index].totalPrice + product.price;
+
+    // if we already had the item 
+    cart[index].q = cart[index].q + 1; // increace the q by 1 
+    cart[index].totalPrice = cart[index].totalPrice + product.price; // increace the total price by the price of the item
   }
 };
 
 const remove = (product) => {
-  const index = cart.findIndex((item) => item.id === product.id);
+  const index = cart.findIndex((item) => item.id === product.id); // find if we have the item in the cart
   if (index !== -1) {
     if (cart[index].q === 1) {
       cart.splice(index, 1);
