@@ -2,7 +2,7 @@ import actions from '../constants/product.constants';
 
 const { SET_PRODUCTS, SET_LOADING, SET_ERROR, RESET_PRODUCTS, RESET_ALL } = actions;
 
-const setProduct = async () => {
+const setProduct = () => {
   return async (dispatch, getState) => {
     dispatch(setLoading(true));
     try {

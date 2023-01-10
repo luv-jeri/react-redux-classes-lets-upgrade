@@ -27,3 +27,50 @@ function App() {
 }
 
 export default App;
+
+const pr = [
+  {
+    id: 1,
+    name: 'A',
+    price: 100,
+  },
+  {
+    id: 2,
+    name: 'B',
+    price: 200,
+  },
+  {
+    id: 3,
+    name: 'C',
+    price: 300,
+  },
+];
+
+const cart = [];
+
+const add = (product) => {
+  const index = cart.findIndex((item) => item.id === product.id);
+  if (index === -1) {
+    const toAdd = {
+      ...product,
+      q: 1,
+      totalPrice: product.price,
+    };
+    cart.push(toAdd);
+  } else {
+    cart[index].q = cart[index].q + 1;
+    cart[index].totalPrice = cart[index].totalPrice + product.price;
+  }
+};
+
+const remove = (product) => {
+  const index = cart.findIndex((item) => item.id === product.id);
+  if (index !== -1) {
+    if (cart[index].q === 1) {
+      cart.splice(index, 1);
+    } else {
+      cart[index].q = cart[index].q - 1;
+      cart[index].totalPrice = cart[index].totalPrice - product.price;
+    }
+  }
+};

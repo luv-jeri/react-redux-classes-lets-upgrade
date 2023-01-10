@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 
 import countReducer from './count.reducer';
 import userReducer from './user.reducer';
@@ -16,7 +16,7 @@ const loggerMiddleware = (store) => (next) => (action) => {
   next(action);
 };
 
-// // write thunk middleware
+// write thunk middleware
 // const thunk = (store) => (next) => async (action) => {
 //   if (typeof action === 'function') {
 //     await action(store.dispatch, store.getState);
@@ -24,8 +24,19 @@ const loggerMiddleware = (store) => (next) => (action) => {
 //   }
 //   next(action);
 // };
+const composeEnhancers =
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+        // Specify extension’s options like name, actionsDenylist, actionsCreators, serialize...
+      })
+    : compose;
 
-const store = createStore(rootReducer, applyMiddleware(loggerMiddleware, thunk));
+const enhancer = composeEnhancers(
+  applyMiddleware(loggerMiddleware, thunk)
+  // other store enhancers if any
+);
+
+const store = createStore(rootReducer, enhancer);
 
 store.subscribe(() => {
   console.table(store.getState());
