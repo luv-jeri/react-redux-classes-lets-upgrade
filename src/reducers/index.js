@@ -1,45 +1,29 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-
-import countReducer from './count.reducer';
-import userReducer from './user.reducer';
-import productReducer from './products.reducer';
-import thunk from 'redux-thunk';
-
-const rootReducer = combineReducers({
-  count: countReducer,
-  user: userReducer,
-  products: productReducer,
-});
+import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
+import countSliceReducer from './Count.slice';
+import productSlice from './Product.slice';
 
 const loggerMiddleware = (store) => (next) => (action) => {
-  console.log('Middleware logger', action);
+  console.log('dispatching', action);
   next(action);
 };
 
-// write thunk middleware
-// const thunk = (store) => (next) => async (action) => {
-//   if (typeof action === 'function') {
-//     await action(store.dispatch, store.getState);
-//     return;
-//   }
-//   next(action);
-// };
-const composeEnhancers =
-  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-        // Specify extension’s options like name, actionsDenylist, actionsCreators, serialize...
-      })
-    : compose;
+const listnerMiddlware = createListenerMiddleware();
 
-const enhancer = composeEnhancers(
-  applyMiddleware(loggerMiddleware, thunk)
-  // other store enhancers if any
-);
+listnerMiddlware.startListening({
+  actionCreator: 'count/increment',
+  effect: (action, store) => {
+    console.log('Incremented', action.payload);
+  },
+});
 
-const store = createStore(rootReducer, enhancer);
-
-store.subscribe(() => {
-  console.log('store changed', store.getState());
+const store = configureStore({
+  reducer: {
+    count: countSliceReducer,
+    product: productSlice,
+  },
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(listnerMiddlware.middleware, loggerMiddleware);
+  },
 });
 
 export default store;
