@@ -39,7 +39,7 @@ const enhancer = composeEnhancers(
 const store = createStore(rootReducer, enhancer);
 
 store.subscribe(() => {
-  console.table(store.getState());
+  console.log('store changed', store.getState());
 });
 
 export default store;

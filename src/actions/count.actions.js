@@ -8,12 +8,14 @@ const incAction = (value) => {
     payload: value,
   };
 };
+
 const decAction = (value) => {
   return {
     type: DECREMENT,
     payload: value,
   };
 };
+
 const resetAction = () => {
   return {
     type: RESET,
